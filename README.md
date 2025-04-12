@@ -1,4 +1,6 @@
-# Task Manager CLI
+# Backend Projects
+
+## Task Manager CLI
 
 This is a simple command-line interface (CLI) task manager built in Python. It allows users to manage tasks by performing operations such as adding, updating, marking, listing, and deleting tasks. Task data is stored in a local tasks.json file.
 
@@ -31,20 +33,38 @@ status: The current status of the task (not_done, in_progress, done).
 createdAt: The date when the task was created.
 updatedAt: The date when the task was last updated.
 
-Example tasks.json file:
-[
-  {
-    "id": 1,
-    "description": "Buy groceries",
-    "status": "not_done",
-    "createdAt": "2025-04-10",
-    "updatedAt": "2025-04-10"
-  },
-  {
-    "id": 2,
-    "description": "Clean the house",
-    "status": "in_progress",
-    "createdAt": "2025-04-11",
-    "updatedAt": "2025-04-11"
+## WeatherAPI ☀️🌧️
+A lightweight Flask API that fetches weather data for a given city using the Visual Crossing Weather API. Includes caching with Redis and basic rate-limiting.
+
+### 🔧 Features
+- 🔍 Search weather by city
+- ⚡ Caching with Redis (12-hour expiration)
+- 🛡️ Rate-limited to 10 requests per minute per IP
+- 🌐 Uses the [Visual Crossing Weather API](https://www.visualcrossing.com/weather-data-editions)
+
+### 🏁 Getting Started
+### 1. Set up virtual environment: 
+python3 -m venv venv
+source venv/bin/activate
+### 2. Install dependencies: 
+pip install -r requirements.txt
+### 3. Create .env file
+### 5. Run the server
+python app.py
+
+API USAGE:
+Browser: http://127.0.0.1:5000/weather?city=Toronto
+{
+  "source": "api",
+  "data": {
+    ...
   }
-]
+}
+If cached, "source": "cache" will be shown instead.
+
+
+
+
+
+
+
