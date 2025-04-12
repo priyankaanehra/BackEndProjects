@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+import json
+import os
+import argparse as ap
+
+#top line tells system to use python to run script 
+# and to make executable run in terminal: chmod +x taskcli 
+TASKS_FILE = "tasks.json"
+
+def load_tasks():
+    if not os.path.exists(TASKS_FILE):
+        return []
+    with open(TASKS_FILE,"r") as file:
+        return json.load(file)
+    
+def save_tasks(tasks):
+    with open(TASKS_FILE,"w") as file:
+        json.dump(tasks,file,indent=2)
+
+def get_new_id(tasks):
+    return max([task["id"] for task in tasks], default=0)+1
+
+def add_tasks(name):
+    tasks=load_tasks()
+    new_task={"id":get_new_id(tasks),"name":name,"status":"not_done"}
+    tasks.append(new_task)
+    save_tasks(tasks)
+    print(f"Task added: {new_task}")
+
+def update_task(position,new_name):
+    tasks=load_tasks()
+    for t in tasks:
+        if t["id"] == position:
+            t["name"]=new_name
+            save_tasks(tasks)
+            print(f"Task updated: {t}")
+            return
+    print(f"Task with ID {position} not found.")
+
+def mark_task(position, status):
+    tasks=load_tasks()
+    for t in tasks:
+        if t["id"] == position:
+            t["status"]=status
+            save_tasks(tasks)
+            print(f"Task marked: {t}")
+            return
+    print(f"Task with ID {position} not found.")
+
+
+def delete_task(position):
+    tasks=load_tasks()
+    tasks= [t for t in tasks if t["id"]!=position]
+    save_tasks(tasks)
+    print(f"Task with Id {position} deleted.")
+
+
+def list_tasks(status=None):
+    tasks=load_tasks()
+    if status:
+        tasks=[task for task in tasks if task["status"]==status]
+    for t in tasks:
+        print(f"Id: {t['id']}, Name: {t['name']}, Status: {t['status']}")
+
+def main():
+    parser = ap.ArgumentParser(description = "Task Manager CLI")
+    sp = parser.add_subparsers(dest="command")
+
+    add_parser = sp.add_parser("add", help="Add a new task")
+    add_parser.add_argument("task_name",help="Name of the task")
+
+    update_parser = sp.add_parser("update",help="Update an existing task")
+    update_parser.add_argument("task_id",type=int,help="Id of task to update")
+    update_parser.add_argument("new_name",help="New name for the task")
+
+    mark_parser = sp.add_parser("mark", help="Mark a task as dont,not_done, or in_progress")
+    mark_parser.add_argument("task_id",type=int,help="Id of task to mark")
+    mark_parser.add_argument("status",choices=["done","not_done","in_progress"],help="New status for task")
+
+    list_parser = sp.add_parser("list",help="List tasks")
+    list_parser.add_argument("status",choices=["done","not_done","in_progress"], nargs="?",help="Filter tasks by status")
+
+    delete_parser = sp.add_parser("delete",help="Delete task at a position")
+    delete_parser.add_argument("task_id", type=int,help="Id of task to delete")
+
+    args = parser.parse_args()
+    if args.command=="add":
+        add_tasks(args.task_name)
+    elif args.command=="update":
+        update_task(args.task_id, args.new_name)
+    elif args.command=="mark":
+        mark_task(args.task_id,args.status)
+    elif args.command=="list":
+        list_tasks(args.status)
+    elif args.command=="delete":
+        delete_task(args.task_id)
+    
+
+
+if __name__ == "__main__":
+    main()
+
