@@ -2,6 +2,7 @@
 import json
 import os
 import argparse as ap
+from datetime import date
 
 #top line tells system to use python to run script 
 # and to make executable run in terminal: chmod +x taskcli 
@@ -22,18 +23,19 @@ def get_new_id(tasks):
 
 def add_tasks(name):
     tasks=load_tasks()
-    new_task={"id":get_new_id(tasks),"name":name,"status":"not_done"}
+    new_task={"id":get_new_id(tasks),"description":name,"status":"not_done", "createdAt":date.today().strftime("%Y-%m-%d"),"updatedAt":date.today().strftime("%Y-%m-%d")}
     tasks.append(new_task)
     save_tasks(tasks)
-    print(f"Task added: {new_task}")
+    print(f"Id: {new_task['id']}, Name: {new_task['description']}, Status: {new_task['status']}, Created: {new_task['createdAt']}, Updated:{new_task['updatedAt']}")
 
 def update_task(position,new_name):
     tasks=load_tasks()
     for t in tasks:
         if t["id"] == position:
-            t["name"]=new_name
+            t["description"]=new_name
+            t["updatedAt"]=date.today().strftime("%Y-%m-%d")
             save_tasks(tasks)
-            print(f"Task updated: {t}")
+            print(f"Id: {t['id']}, Name: {t['description']}, Status: {t['status']}, Created: {t['createdAt']}, Updated:{t['updatedAt']}")
             return
     print(f"Task with ID {position} not found.")
 
@@ -42,8 +44,9 @@ def mark_task(position, status):
     for t in tasks:
         if t["id"] == position:
             t["status"]=status
+            t["updatedAt"]=date.today().strftime("%Y-%m-%d")
             save_tasks(tasks)
-            print(f"Task marked: {t}")
+            print(f"Id: {t['id']}, Name: {t['description']}, Status: {t['status']}, Created: {t['createdAt']}, Updated:{t['updatedAt']}")
             return
     print(f"Task with ID {position} not found.")
 
@@ -60,7 +63,7 @@ def list_tasks(status=None):
     if status:
         tasks=[task for task in tasks if task["status"]==status]
     for t in tasks:
-        print(f"Id: {t['id']}, Name: {t['name']}, Status: {t['status']}")
+        print(f"Id: {t['id']}, Name: {t['description']}, Status: {t['status']}, Created: {t['createdAt']}, Updated:{t['updatedAt']}")
 
 def main():
     parser = ap.ArgumentParser(description = "Task Manager CLI")
