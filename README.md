@@ -52,14 +52,17 @@ pip install -r requirements.txt
 ### 5. Run the server
 python app.py
 
-API USAGE:
+### API USAGE:
+
 Browser: http://127.0.0.1:5000/weather?city=Toronto
+```json
 {
   "source": "api",
   "data": {
     ...
   }
 }
+```
 If cached, "source": "cache" will be shown instead.
 
 
