@@ -1,2 +1,4 @@
 .env
 venv/
+venvblog/
+.DS_Store
